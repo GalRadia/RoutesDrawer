@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/line_CARD_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marging_card_default"
+        android:layout_marginEnd="@dimen/marging_card_default"
+        android:layout_marginVertical="@dimen/marging_card_default"
+        android:elevation="@dimen/card_elevation_default"
+        app:cardCornerRadius="@dimen/radius_card_default"
+        app:cardElevation="@dimen/card_elevation_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_default"
+            android:layout_marginEnd="@dimen/margin_default">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/route_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/route_margin"
+                android:layout_marginTop="@dimen/route_margin"
+                android:layout_marginEnd="@dimen/route_margin"
+                android:layout_marginBottom="@dimen/route_margin"
+                android:textSize="@dimen/route_text_size"
+                android:textStyle="bold"
+                tools:text="name" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/route_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/route_margin"
+                android:textSize="@dimen/route_text_size"
+                android:textStyle="bold"
+                tools:text="000" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

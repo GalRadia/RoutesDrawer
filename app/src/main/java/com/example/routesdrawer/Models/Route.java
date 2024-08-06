@@ -3,6 +3,7 @@ package com.example.routesdrawer.Models;
 import android.graphics.Color;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -11,16 +12,14 @@ import java.util.List;
 public class Route {
     private List<MyLoc> locations;
     private String name;
-    private GoogleMap map;
 
 
     public Route() {
     }
 
-    public Route(List<MyLoc> locations, String name,GoogleMap map) {
+    public Route(List<MyLoc> locations, String name) {
         this.locations = locations;
         this.name = name;
-        this.map = map;
     }
 
     public List<MyLoc> getLocations() {
@@ -40,16 +39,7 @@ public class Route {
         this.name = name;
         return this;
     }
-
-    public GoogleMap getMap() {
-        return map;
-    }
-
-    public Route setMap(GoogleMap map) {
-        this.map = map;
-        return this;
-    }
-    public void addPolyline(){
+    public void addPolyline(GoogleMap map){
         if (map == null || locations == null || locations.isEmpty()) {
             return;
         }
@@ -67,8 +57,7 @@ public class Route {
             PolylineOptions polylineOptions = new PolylineOptions()
                     .add(startLatLng, endLatLng)
                     .color(color)
-                    .width(5); // Set the width of the polyline
-
+                    .width(15); // Set the width of the polyline
             map.addPolyline(polylineOptions);
         }
     }

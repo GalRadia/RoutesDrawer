@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_default">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="route_text_size">16sp</dimen>
+    <dimen name="card_elevation_default">8dp</dimen>
+    <dimen name="marging_card_default">10dp</dimen>
+    <dimen name="radius_card_default">20dp</dimen>
+    <dimen name="padding_default">20dp</dimen>
+    <dimen name="route_margin">12dp</dimen>
+</resources>
