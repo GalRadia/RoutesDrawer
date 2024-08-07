@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.routesdrawer.Models.Route;
 import com.example.routesdrawer.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         routeViewHolder.routeSize.setText(route.getLocations().size()+"");
         if (routeCallbacks != null) {
             routeViewHolder.itemView.setOnClickListener(v -> routeCallbacks.onRouteClicked(getRoute(i)));
+            routeViewHolder.bitmapB.setOnClickListener(v -> routeCallbacks.onBitmapClicked(getRoute(i)));
         }
     }
     public Route getRoute(int position) {
@@ -62,15 +64,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     public class RouteViewHolder extends RecyclerView.ViewHolder {
         MaterialTextView routeName;
         MaterialTextView routeSize;
+        MaterialButton bitmapB;
         public RouteViewHolder(@NonNull View view) {
             super(view);
             routeName = view.findViewById(R.id.route_name);
             routeSize = view.findViewById(R.id.route_size);
+            bitmapB = view.findViewById(R.id.Bitmap_BTN);
         }
     }
 
     public interface RouteCallbacks {
         void onRouteClicked(Route route);
+        void onBitmapClicked(Route route);
     }
 
 }

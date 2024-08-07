@@ -1,5 +1,7 @@
 package com.example.routesdrawer.Models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class MyLoc {
 
     private double lat;
@@ -35,6 +37,9 @@ public class MyLoc {
     public MyLoc setAltitude(double altitude) {
         this.altitude = altitude;
         return this;
+    }
+    public LatLng getLatLng() {
+        return new LatLng(lat, lon);
     }
 
     public float getSpeed() {

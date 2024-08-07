@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "RoutesDrawer"
 include(":app")
- 
+include(":RoutesDrawerLibrary")

@@ -48,6 +48,17 @@
                 android:textSize="@dimen/route_text_size"
                 android:textStyle="bold"
                 tools:text="000" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/Bitmap_BTN"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/route_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/route_margin"
+                android:layout_marginEnd="@dimen/route_margin"
+                android:text="Bitmap" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,35 @@
 package com.example.routesdrawer;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 
 import com.example.routesdrawer.Models.MyLoc;
 import com.example.routesdrawer.Models.Route;
 import com.example.routesdrawer.Services.LocationService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 public class RoutesManager {
     private static final String PREFS_NAME = "routes_prefs";
@@ -23,11 +40,33 @@ public class RoutesManager {
     private Route currentRoute;
     private SharedPreferences sharedPreferences;
     private Gson gson;
+    private Context context;
 
     private static RoutesManager instance;
 
+    public Context getContext() {
+        return context;
+    }
+
     private RoutesManager(Context context) {
-        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        try {
+            MasterKey masterKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            sharedPreferences = EncryptedSharedPreferences.create(
+                    context,
+                    PREFS_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+            // Handle the exception
+        }
+        this.context = context;
         gson = new Gson();
         routes = loadRoutes();
         currentRoute = loadCurrentRoute();
@@ -127,5 +166,7 @@ public class RoutesManager {
         context.startService(serviceIntent); // Start the service with the stop action
         Toast.makeText(context, "Service is stopped", Toast.LENGTH_SHORT).show();
     }
+
+
 
 }
