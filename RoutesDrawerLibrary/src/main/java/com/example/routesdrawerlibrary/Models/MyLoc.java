@@ -1,4 +1,4 @@
-package com.example.routesdrawer.Models;
+package com.example.routesdrawerlibrary.Models;
 
 import com.google.android.gms.maps.model.LatLng;
 

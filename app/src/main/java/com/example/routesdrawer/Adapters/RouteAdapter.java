@@ -1,7 +1,6 @@
 package com.example.routesdrawer.Adapters;
 
 import android.content.Context;
-import android.media.MediaRouter2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.routesdrawer.Models.Route;
 import com.example.routesdrawer.R;
+import com.example.routesdrawerlibrary.Models.Route;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 

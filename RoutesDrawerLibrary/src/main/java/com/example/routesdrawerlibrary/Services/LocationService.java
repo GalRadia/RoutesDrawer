@@ -1,4 +1,4 @@
-package com.example.routesdrawer.Services;
+package com.example.routesdrawerlibrary.Services;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -24,10 +24,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.routesdrawer.MainActivity;
-import com.example.routesdrawer.Models.MyLoc;
-import com.example.routesdrawer.R;
-import com.example.routesdrawer.RoutesManager;
+import com.example.routesdrawerlibrary.Models.MyLoc;
+import com.example.routesdrawerlibrary.R;
+import com.example.routesdrawerlibrary.RoutesManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -40,6 +39,8 @@ public class LocationService extends Service {
 
     public static final String START_FOREGROUND_SERVICE = "START_FOREGROUND_SERVICE";
     public static final String STOP_FOREGROUND_SERVICE = "STOP_FOREGROUND_SERVICE";
+    public static final String DEFAULT_CHANNEL_NAME = "Location Service";
+    public static final String DEFAULT_CHANNEL_DESCRIPTION = "Notifications for location service";
 
     public static int NOTIFICATION_ID = 168;
     private int lastShownNotificationId = -1;
@@ -70,7 +71,7 @@ public class LocationService extends Service {
                 return START_STICKY;
             }
             isServiceRunningRightNow = true;
-            notifyToUserForForegroundService();
+            notifyToUserForForegroundService(intent.getClass());
             startRecording();
         } else if (action.equals(STOP_FOREGROUND_SERVICE)) {
             Log.d("pttt", "Stop recording");
@@ -93,7 +94,6 @@ public class LocationService extends Service {
                 .setAltitude(altitude)
                 .setBearing(bearing)
                 .setSpeed(speed);
-        Log.d("@@@@@@@@@@@@@@@@@@@@@@@@@", " SERVICE: " + myLoc.getSpeed() + " " + myLoc.getLat() + " " + myLoc.getLon());
         RoutesManager.getInstance(getApplicationContext()).addLocation(myLoc);
     };
 
@@ -154,24 +154,27 @@ public class LocationService extends Service {
         return null;
     }
 
-    private void notifyToUserForForegroundService() {
+    private void notifyToUserForForegroundService(Class<?> targetActivityClass) {
         // On notification click
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, targetActivityClass);
         notificationIntent.setAction(MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        notificationBuilder = getNotificationBuilder(this,
-                CHANNEL_ID,
-                NotificationManagerCompat.IMPORTANCE_LOW); //Low importance prevent visual appearance for this notification channel on top
+        // Use default channel name and description
+        String channelName = DEFAULT_CHANNEL_NAME;
+        String channelDescription = DEFAULT_CHANNEL_DESCRIPTION;
+
+        notificationBuilder = getNotificationBuilder(this, CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_LOW, channelName, channelDescription); // Low importance prevents visual appearance for this notification channel on top
 
         notificationBuilder
                 .setContentIntent(pendingIntent) // Open activity
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.marker_24)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round))
-                .setContentTitle("App in progress")
-                .setContentText("Content");
+                .setContentTitle("Routes Drawer is running, click to open")
+                .setContentText("Location service is running")
+                .setPriority(NotificationCompat.PRIORITY_LOW);
 
         Notification notification = notificationBuilder.build();
 
@@ -186,10 +189,11 @@ public class LocationService extends Service {
         lastShownNotificationId = NOTIFICATION_ID;
     }
 
-    public static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int importance) {
+
+    public static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int importance, String channelName, String channelDescription) {
         NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            prepareChannel(context, channelId, importance);
+            prepareChannel(context, channelId, importance, channelName, channelDescription);
             builder = new NotificationCompat.Builder(context, channelId);
         } else {
             builder = new NotificationCompat.Builder(context);
@@ -198,17 +202,15 @@ public class LocationService extends Service {
     }
 
     @TargetApi(26)
-    private static void prepareChannel(Context context, String id, int importance) {
-        final String appName = context.getString(R.string.app_name);
-        String notifications_channel_description = "Route Drawer app location channel";
+    private static void prepareChannel(Context context, String id, int importance, String channelName, String channelDescription) {
         final NotificationManager nm = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
 
         if (nm != null) {
             NotificationChannel nChannel = nm.getNotificationChannel(id);
 
             if (nChannel == null) {
-                nChannel = new NotificationChannel(id, appName, importance);
-                nChannel.setDescription(notifications_channel_description);
+                nChannel = new NotificationChannel(id, channelName, importance);
+                nChannel.setDescription(channelDescription);
                 nChannel.enableLights(true);
                 nChannel.setLightColor(Color.BLUE);
 
@@ -216,4 +218,5 @@ public class LocationService extends Service {
             }
         }
     }
+
 }

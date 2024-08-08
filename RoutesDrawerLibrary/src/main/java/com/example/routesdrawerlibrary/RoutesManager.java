@@ -1,35 +1,24 @@
-package com.example.routesdrawer;
+package com.example.routesdrawerlibrary;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
-import com.example.routesdrawer.Models.MyLoc;
-import com.example.routesdrawer.Models.Route;
-import com.example.routesdrawer.Services.LocationService;
+import com.example.routesdrawerlibrary.Models.MyLoc;
+import com.example.routesdrawerlibrary.Models.Route;
+import com.example.routesdrawerlibrary.Services.LocationService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 public class RoutesManager {
     private static final String PREFS_NAME = "routes_prefs";
