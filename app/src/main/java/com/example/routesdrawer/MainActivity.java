@@ -87,11 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI() {
         startBTN.setOnClickListener(v -> {
-            if (hasAllPermissions()) {
                 routesManager.startServiceIntent(this);
-            } else {
-                requestPermissions();
-            }
+
         });
 
         stopBTN.setOnClickListener(v -> routesManager.stopServiceIntent(this));
@@ -100,34 +97,6 @@ public class MainActivity extends AppCompatActivity {
             routeAdapter.setRoutes(routesManager.getRoutes());
             routeAdapter.notifyDataSetChanged();
         });
-    }
-
-    private boolean hasAllPermissions() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-
-                (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestPermissions() {
-        String[] permissions;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions = new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.FOREGROUND_SERVICE,
-                    Manifest.permission.FOREGROUND_SERVICE_LOCATION
-            };
-        } else {
-            permissions = new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.FOREGROUND_SERVICE
-            };
-        }
-        ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_REQUEST_CODE);
     }
 
     private void setupUI() {
@@ -153,55 +122,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBitmapClicked(Route route) {
                 mapView.getMapAsync(googleMap -> {
-                    route.getBitmap(googleMap, bitmap -> saveImage(bitmap, route.getName()));
+                    route.getBitmap(googleMap, bitmap -> routesManager.saveImage(bitmap, route.getName()));
                 });
 
             }
         });
         recyclerView.setAdapter(routeAdapter);
-    }
-
-    private void saveImage(Bitmap finalBitmap, String imageName) {
-        String fileName = "Image-" + imageName + ".jpg";
-        OutputStream outStream;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContentResolver resolver = getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
-
-            Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            try {
-                if (imageUri != null) {
-                    outStream = resolver.openOutputStream(imageUri);
-                    finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outStream);
-                    if (outStream != null) {
-                        outStream.flush();
-                        outStream.close();
-                        Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            String root = Environment.getExternalStorageDirectory().toString();
-            File myDir = new File(root + "/Pictures");
-            myDir.mkdirs();
-            File file = new File(myDir, fileName);
-            if (file.exists()) file.delete();
-            try {
-                outStream = new FileOutputStream(file);
-                finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outStream);
-                outStream.flush();
-                outStream.close();
-                Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -251,16 +177,10 @@ public class MainActivity extends AppCompatActivity {
         mapView.onLowMemory();
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permissions granted, proceed with the action
-            } else {
-                // Permissions denied, show a message to the user
-                Toast.makeText(this, "Permissions denied, cannot proceed", Toast.LENGTH_SHORT).show();
-            }
-        }
+        routesManager.handlePermissionsResult(requestCode, permissions, grantResults);
     }
 }
