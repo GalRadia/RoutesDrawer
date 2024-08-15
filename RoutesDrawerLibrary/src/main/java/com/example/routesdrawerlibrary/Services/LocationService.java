@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,8 +69,10 @@ public class LocationService extends Service {
         if (action.equals(START_FOREGROUND_SERVICE)) {
             Log.d("pttt", "Start to recording");
             if (isServiceRunningRightNow) {
+                Toast.makeText(getApplicationContext(), "Service is already running", Toast.LENGTH_SHORT).show();
                 return START_STICKY;
             }
+            Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
             isServiceRunningRightNow = true;
             notifyToUserForForegroundService(intent.getClass());
             startRecording();
@@ -118,7 +121,6 @@ public class LocationService extends Service {
     }
 
     private void stopRecording() {
-        Log.d("pttt", "stopRecording called");
         if (wakeLock != null && wakeLock.isHeld()) {
             wakeLock.release();
         }
@@ -127,11 +129,6 @@ public class LocationService extends Service {
             fusedLocationProviderClient.removeLocationUpdates(locationCallback).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Log.d("pttt", "stop Location Callback removed.");
-                    } else {
-                        Log.d("pttt", "stop Failed to remove Location Callback.");
-                    }
                     RoutesManager.getInstance(getApplicationContext()).completeCurrentRoute(); // Complete current route
                     stopForeground(true);
                     stopSelf();
@@ -171,8 +168,9 @@ public class LocationService extends Service {
                 .setContentIntent(pendingIntent) // Open activity
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.marker_24)
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round))
-                .setContentTitle("Routes Drawer is running, click to open")
+                .setContentTitle("Routes Drawer")
                 .setContentText("Location service is running")
                 .setPriority(NotificationCompat.PRIORITY_LOW);
 

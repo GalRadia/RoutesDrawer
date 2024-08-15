@@ -66,14 +66,14 @@ public class Route {
                     .add(startLatLng)
                     .add(endLatLng)
                     .addSpan(new StyleSpan(StrokeStyle.gradientBuilder(startColor, endColor).build()))
-                    .width(22); // Set the width of the polyline
+                    .width(25); // Set the width of the polyline
             map.addPolyline(polylineOptions);
         }
     }
 
     private int getColorForSpeed(float speed) {
-        // Assuming speed ranges from 0 to 100 km/h, with faster speeds being much redder
-        float normalizedSpeed = Math.min(speed / 20, 1.0f); // Normalize speed to 0-1
+        // Assuming speed ranges from 0 to 15 km/h, with faster speeds being much redder
+        float normalizedSpeed = Math.min(speed / 15, 1.0f); // Normalize speed to 0-1
 
         // Use a power function to make the color change faster and stronger
         float exponent = 2.0f; // Adjust this value for stronger or weaker transition
@@ -96,49 +96,6 @@ public class Route {
         return Color.rgb(red, green, blue);
     }
 
-    //    public File saveBitmap(Bitmap bitmap, Context context) {
-//        String fileName = "image.png"; // or any other format
-//        FileOutputStream outStream = null;
-//        File file = null;
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            ContentResolver resolver = context.getContentResolver();
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-//            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
-//            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
-//
-//            Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-//            try {
-//                outStream = (FileOutputStream) resolver.openOutputStream(imageUri);
-//                file = new File(imageUri.getPath());
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//            file = new File(path, fileName);
-//            try {
-//                path.mkdirs();
-//                outStream = new FileOutputStream(file);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        if (outStream != null) {
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-//            try {
-//                outStream.flush();
-//                outStream.close();
-//                Toast.makeText(context, "Image saved successfully", Toast.LENGTH_SHORT).show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return file;
-//    }
     public void getBitmap(GoogleMap map, OnBitmapReadyCallback callback) {
         map.snapshot(bitmap -> {
             if (callback != null) {
