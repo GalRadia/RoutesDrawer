@@ -168,7 +168,6 @@ public class RoutesManager {
         Intent serviceIntent = new Intent(context, LocationService.class);
         serviceIntent.setAction(LocationService.START_FOREGROUND_SERVICE);
         context.startService(serviceIntent);
-        Toast.makeText(context, "Service is running", Toast.LENGTH_SHORT).show();
     }
 
     public void stopServiceIntent(Context context) {
