@@ -52,8 +52,7 @@ secrets {
 }
 
 dependencies {
-    implementation(project(":RoutesDrawerLibrary"))
-
+    implementation(project(":RoutesDrawer"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
