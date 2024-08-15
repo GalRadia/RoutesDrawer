@@ -5,7 +5,7 @@
 ## **Features**
 
 - **Polyline Visualization**: Color-changing polylines based on route speed.
-- **Location Management**: Stores latitude, longitude, altitude, speed, and bearing.
+- **Location Management**: Record current location and Stores latitude, longitude, altitude, speed, and bearing.
 - **Map Snapshot**: Captures the current map view as a bitmap.
 - **Automatic Permissions**: Requests necessary permissions automatically.
 - **Encrypted Shared Preferences**: Securely stores sensitive data using encrypted shared preferences, ensuring that your app's data remains protected and confidential. 
