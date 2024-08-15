@@ -53,6 +53,7 @@ secrets {
 
 dependencies {
     implementation(project(":RoutesDrawer"))
+    implementation("com.github.jitpack:android-example:1.0.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

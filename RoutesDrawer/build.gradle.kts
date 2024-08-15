@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("maven-publish")
 
 }
 
@@ -35,6 +36,7 @@ android {
 }
 
 dependencies {
+
 
     implementation(libs.appcompat)
     implementation(libs.material)
